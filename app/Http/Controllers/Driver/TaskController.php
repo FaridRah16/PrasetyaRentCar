@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Driver;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
-use Illuminate\Http\Request;
+use App\Models\Driver;
 use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
@@ -78,8 +78,9 @@ class TaskController extends Controller
         $task->car->update(['status' => 'available']);
 
         // Update driver status back to available
-        if ($task->driver && $task->driver->user) {
-            $task->driver->update(['status' => 'available']);
+        $driver = Driver::where('user_id', $task->driver_id)->first();
+        if ($driver) {
+            $driver->update(['status' => 'available']);
         }
 
         return redirect()->route('driver.tasks.index')
